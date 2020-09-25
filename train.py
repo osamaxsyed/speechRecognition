@@ -10,9 +10,12 @@ EPOCHS = 40
 BATCH_SIZE = 32
 PATIENCE = 5
 LEARNING_RATE = 0.0001
+KEYWORDS = None
+NUM_KEYWORDS = None
 
 
 def load_data(data_path):
+    global KEYWORDS,NUM_KEYWORDS
     """Loads training dataset from json file.
     :param data_path (str): Path to json file containing data
     :return X (ndarray): Inputs
@@ -23,6 +26,9 @@ def load_data(data_path):
 
     X = np.array(data["MFCCs"])
     y = np.array(data["labels"])
+    KEYWORDS = np.array(data["mappings"])
+    NUM_KEYWORDS = KEYWORDS.size
+    print(NUM_KEYWORDS)
     print("Training sets loaded!")
     return X, y
 
@@ -90,7 +96,7 @@ def build_model(input_shape, loss="sparse_categorical_crossentropy", learning_ra
     tf.keras.layers.Dropout(0.3)
 
     # softmax output layer
-    model.add(tf.keras.layers.Dense(10, activation='softmax'))
+    model.add(tf.keras.layers.Dense(NUM_KEYWORDS, activation='softmax'))
 
     optimiser = tf.optimizers.Adam(learning_rate=learning_rate)
 
@@ -167,7 +173,7 @@ def main():
     history = train(model, EPOCHS, BATCH_SIZE, PATIENCE, X_train, y_train, X_validation, y_validation)
 
     # plot accuracy/loss for training/validation set as a function of the epochs
-    plot_history(history)
+    # plot_history(history)
 
     # evaluate network on test set
     test_loss, test_acc = model.evaluate(X_test, y_test)

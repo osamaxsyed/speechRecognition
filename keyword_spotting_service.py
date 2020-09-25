@@ -1,6 +1,7 @@
 import librosa
 import tensorflow as tf
 import numpy as np
+import train
 
 SAVED_MODEL_PATH = "model.h5"
 SAMPLES_TO_CONSIDER = 22050
@@ -12,8 +13,16 @@ class _Keyword_Spotting_Service:
 
     model = None
     _mapping = [
-        "dataset\\bed",
-        "dataset\\no"
+        "dataset\\cat",
+        "dataset\\dog",
+        "dataset\\four",
+        "dataset\\happy",
+        "dataset\\marvin",
+        "dataset\\no",
+        "dataset\\seven",
+        "dataset\\tree",
+        "dataset\\yes",
+        "dataset\\zero"
     ]
     _instance = None
 
@@ -83,5 +92,5 @@ if __name__ == "__main__":
     assert kss is kss1
 
     # make a prediction
-    keyword = kss.predict("test/no.wav")
+    keyword = kss.predict("test/zero.wav")
     print(keyword)

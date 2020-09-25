@@ -2,10 +2,35 @@ import random
 import os
 from flask import Flask, request, jsonify
 from keyword_spotting_service import Keyword_Spotting_Service
+import train
+import prepare_dataset
 
 
 # instantiate flask app
 app = Flask(__name__)
+DATASET_PATH = "dataset"
+JSON_PATH = "data.json"
+
+@app.route("/label", methods =["POST"])
+def label():
+	file = request.files["file"]
+	label = request.form['label']
+
+	if(os.path.isdir("dataset\\"+label)):
+		print("Word Already Exists")
+	else:
+		print("Word Does not exist")
+		os.mkdir("dataset\\"+label)
+		newDirectory = "dataset\\"+label
+		file.save(os.path.join(newDirectory,file.filename))
+		print("=-=-=-=-=-=-= \n DONE TRAINING")
+
+
+	prepare_dataset.prepare_dataset(DATASET_PATH, JSON_PATH)
+	train.main()
+	return jsonify({})
+
+
 
 
 @app.route("/predict", methods=["POST"])
@@ -35,4 +60,4 @@ def predict():
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0',debug=True)
+    app.run(debug=False)

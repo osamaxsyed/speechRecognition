@@ -28,7 +28,10 @@ def label():
 
 	prepare_dataset.prepare_dataset(DATASET_PATH, JSON_PATH)
 	train.main()
+
 	return jsonify({})
+
+
 
 
 

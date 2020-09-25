@@ -3,6 +3,7 @@ import tensorflow as tf
 import numpy as np
 import train
 
+DATA_PATH = "data.json"
 SAVED_MODEL_PATH = "model.h5"
 SAMPLES_TO_CONSIDER = 22050
 
@@ -10,24 +11,14 @@ class _Keyword_Spotting_Service:
     """Singleton class for keyword spotting inference with trained models.
     :param model: Trained model
     """
-
+    train.load_data(DATA_PATH)
     model = None
-    _mapping = [
-        "dataset\\cat",
-        "dataset\\dog",
-        "dataset\\four",
-        "dataset\\happy",
-        "dataset\\marvin",
-        "dataset\\no",
-        "dataset\\seven",
-        "dataset\\tree",
-        "dataset\\yes",
-        "dataset\\zero"
-    ]
+    _mapping = train.KEYWORDS
     _instance = None
 
 
     def predict(self, file_path):
+        global MFCCs
         """
         :param file_path (str): Path to audio file to predict
         :return predicted_keyword (str): Keyword predicted by the model
